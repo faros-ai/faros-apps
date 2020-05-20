@@ -26,7 +26,7 @@ def lambda_handler(event, context):
     response = client.execute(query)
     response_json = json.loads(response)
     instances = response_json["data"]["ec2_instance"]["data"]
-    required_keys = frozenset(event["params"]["keys"])
+    required_keys = frozenset(event["params"]["keys"].split(","))
     tagless_instances = [{"instance": i, "missingKeys": missing_tags(
         required_keys, frozenset([t["key"] for t in i["tags"]]))} for i in instances]
     tagless_instances = [i for i in tagless_instances if i["missingKeys"]]

@@ -32,7 +32,4 @@ def lambda_handler(event, context):
     response_json = json.loads(response)
     functions = response_json["data"]["lambda_functionConfiguration"]["data"]
 
-    # Todo - check if this is necessary and delete the method above
-    # flat_functions = get_all_functions(functions)
-
     return [f for f in functions if not f["deadLetterConfig"]["targetArn"]]

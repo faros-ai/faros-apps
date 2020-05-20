@@ -15,7 +15,7 @@ def lambda_handler(event, context):
     client.inject_token("Bearer {}".format(event["farosToken"]))
 
     query = '''{
-              all_ec2_VpcEndpoint {
+              ec2_vpcEndpoint {
                 data {
                   vpcId
                   policyDocument
@@ -27,7 +27,7 @@ def lambda_handler(event, context):
 
     response = client.execute(query)
     response_json = json.loads(response)
-    endpoints = response_json["data"]["all_ec2_VpcEndpoint"]["data"]
+    endpoints = response_json["data"]["ec2_vpcEndpoint"]["data"]
     return [
       e for e in endpoints
       if check_statement(e["policyDocument"]["Statement"])

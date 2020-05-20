@@ -3,6 +3,12 @@ from graphqlclient import GraphQLClient
 from urllib.parse import unquote
 
 
+def has_full_star_policy(user):
+    user_full_star_policies = [p for p in user["userPolicyList"] if full_star_policy(p)]
+    group_full_star_policies = [p for g in user["groups"]["data"] for p in g["groupPolicyList"] if full_star_policy(p)]
+    user_full_star_policies.extend(group_full_star_policies)
+    return user_full_star_policies
+
 def full_star_doc(doc):
     statements = doc["Statement"]
 
@@ -55,6 +61,10 @@ def lambda_handler(event, context):
                     policyName
                     policyArn
                   }
+                  userPolicyList {
+                    policyName
+                    policyDocument
+                  }
                   groups {
                     data {
                       groupId
@@ -62,6 +72,10 @@ def lambda_handler(event, context):
                       attachedManagedPolicies {
                         policyName
                         policyArn
+                      }
+                      groupPolicyList {
+                        policyName
+                        policyDocument
                       }
                     }
                   }
@@ -73,5 +87,5 @@ def lambda_handler(event, context):
 
     response = client.execute(query)
     response_json = json.loads(response)
-    groups = response_json["data"]["iam_userDetail"]["data"]
-    return [g for g in groups if full_star_policy(g["groupPolicyList"])]
+    users = response_json["data"]["iam_userDetail"]["data"]
+    return [u for u in users if has_full_star_policy(u)]

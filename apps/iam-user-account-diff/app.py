@@ -3,7 +3,6 @@ from graphqlclient import GraphQLClient
 from termcolor import colored
 
 def diff_lists_of_scalars(list1, list2):
-    print(f"scalars: {list1}\t{list2}")
     list1 = frozenset(list1)
     list2 = frozenset(list2)
 
@@ -20,7 +19,6 @@ def format_string(string, pad):
     return pad + s.replace("\n", f"\n{pad}")
 
 def diff_lists_of_objects(list1, list2, keys, prefix, depth):
-    print(f"diff_lists_of_objects: {prefix}")    
     key = keys[prefix]
     list1 = sorted(list1, key = lambda x: x[key])
     list2 = sorted(list2, key = lambda x: x[key])
@@ -35,7 +33,6 @@ def diff_lists_of_objects(list1, list2, keys, prefix, depth):
         item1 = list1[pointer1]
         item2 = list2[pointer2]
 
-        print(f"comparing {item1[key]} to {item2[key]}")
         if item1[key] < item2[key]:
             diffs.append(colored("- " + format_string(item1, pad), "red"))
             is_different = True
@@ -62,7 +59,6 @@ def diff_lists(list1, list2, keys, prefix = "", depth = 0):
         s = string[len(pad):]
         return f'{pad[:-1]}"{prefix[prefix.rfind(".") + 1:]}": {s}'
 
-    print(f"diff_lists: {prefix}")
     pad = '\t' * depth
 
     if list1 == [] and list2 == []:
@@ -82,13 +78,11 @@ def diff_lists(list1, list2, keys, prefix = "", depth = 0):
 
 
 def diff_objects(obj1, obj2, keys, prefix, depth):
-    print(f"diff_objects: {prefix}")    
     if "farosAccountId" in obj1:
         del obj1["farosAccountId"]
         del obj2["farosAccountId"]
     keys1 = sorted(obj1.keys())
     keys2 = sorted(obj2.keys())
-    print(f"keys: {keys1}\t{keys2}")
 
     pad = '\t' * depth
     index1 = 0
@@ -126,7 +120,6 @@ def diff_objects(obj1, obj2, keys, prefix, depth):
             index1 += 1
             index2 += 1
 
-    print(f"finished {prefix}, diff = {is_different}")
     if is_different:
         object_name = ""
         if prefix != "":

@@ -5,7 +5,7 @@ handler: app.lambda_handler
 runtime: python3.8
 executionTimeoutInSecs: 10
 author: apps@faros.ai
-location: https://www.github.com/faros-ai/faros-apps/apps/ec2-missing-tags
+location: https://www.github.com/faros-ai/faros-apps/apps/ec2-missing-instance-tags
 tags:
   - aws
   - ec2

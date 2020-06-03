@@ -1,11 +1,11 @@
-appId: ec2-ebs-unattached-volumes
+appId: ec2-unattached-ebs-volumes
 displayName: Unattached EBS Volumes
 description: Find any unattached EBS volumes
 handler: app.lambda_handler
 runtime: python3.8
 executionTimeoutInSecs: 10
 author: apps@faros.ai
-location: https://www.github.com/faros-ai/faros-apps/apps/ec2-ebs-unattached-volumes
+location: https://www.github.com/faros-ai/faros-apps/apps/ec2-unattached-ebs-volumes
 tags:
   - ebs
   - aws

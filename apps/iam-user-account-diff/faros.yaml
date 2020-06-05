@@ -1,7 +1,7 @@
 appId: iam-user-account-diff
 displayName: IAM Users Account Diff
 description: >-
-  Compares all user details data between two accounts (<reference_account_id> and <new_account_id>) and returns the
+  Compares all user details data between two accounts (<ref_account_id> and <new_account_id>) and returns the
   differences.
 handler: app.lambda_handler
 runtime: python3.8

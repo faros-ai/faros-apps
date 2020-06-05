@@ -8,6 +8,7 @@ author: apps@faros.ai
 location: https://www.github.com/faros-ai/faros-apps/apps/ec2-exposed-vpc-endpoints
 tags:
   - aws
+  - compliance
   - ec2
-  - vpc
   - security
+  - vpc

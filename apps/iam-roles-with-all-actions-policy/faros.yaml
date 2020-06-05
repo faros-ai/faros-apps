@@ -7,6 +7,7 @@ executionTimeoutInSecs: 10
 author: apps@faros.ai
 location: https://www.github.com/faros-ai/faros-apps/apps/iam-roles-with-all-actions-policy
 tags:
-  - iam
   - aws
+  - compliance
+  - iam
   - security

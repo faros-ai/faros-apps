@@ -8,5 +8,6 @@ author: apps@faros.ai
 location: https://www.github.com/faros-ai/faros-apps/apps/ec2-public-instances
 tags:
   - aws
+  - compliance
   - ec2
   - security

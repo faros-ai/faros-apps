@@ -8,4 +8,5 @@ author: apps@faros.ai
 location: https://www.github.com/faros-ai/faros-apps/apps/ec2-missing-ebs-volume-tags
 tags:
   - aws
+  - compliance
   - ebs

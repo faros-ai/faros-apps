@@ -32,8 +32,8 @@ def full_star_doc(doc):
     return False
 
 
-def full_star_policy(policyList):
-    for policy in policyList:
+def full_star_policy(policy_list):
+    for policy in policy_list:
         doc = policy["policyDocument"]
         decoded_doc = json.loads(unquote(doc))
         if full_star_doc(decoded_doc):

@@ -1,0 +1,12 @@
+appId: s3-bucket-logging-audit
+displayName: S3 Bucket Logging Audit
+description: Finds all s3 buckets that do not have server access logging enabled
+handler: app.lambda_handler
+runtime: python3.8
+executionTimeoutInSecs: 10
+author: apps@faros.ai
+location: https://www.github.com/faros-ai/faros-apps/apps/s3-bucket-logging-audit
+tags:
+  - aws
+  - s3
+  - security

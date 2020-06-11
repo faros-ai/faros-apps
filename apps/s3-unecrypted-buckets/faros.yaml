@@ -1,0 +1,13 @@
+appId: s3-unencrypted-buckets
+displayName: S3 Unencrypted Buckets
+description: Find all s3 buckets that are not encypted
+handler: app.lambda_handler
+runtime: python3.8
+executionTimeoutInSecs: 10
+author: apps@faros.ai
+location: https://www.github.com/faros-ai/faros-apps/apps/s3-unecrypted-buckets
+tags:
+  - aws
+  - compliance
+  - s3
+  - security

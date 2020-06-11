@@ -1,0 +1,15 @@
+appId: s3-missing-bucket-policy
+displayName: S3 Missing Buckets Policies
+description: >-
+  Find all s3 buckets that are missing the policy statement in the <parameter required_policy_statement>.
+  If the parameter is not supplied return buckets without any policies defined.
+handler: app.lambda_handler
+runtime: python3.8
+executionTimeoutInSecs: 10
+author: apps@faros.ai
+location: https://www.github.com/faros-ai/faros-apps/apps/s3-missing-bucket-policy
+tags:
+  - aws
+  - compliance
+  - s3
+  - security

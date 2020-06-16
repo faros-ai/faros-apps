@@ -27,4 +27,10 @@ def lambda_handler(event, context):
 
     response = client.graphql_query(query)
     volumes = response["aws"]["ec2"]["volume"]["data"]
-    return [i for i in volumes if i["instance"]["state"]["name"] == "stopped"]
+    volumes_with_stopped_instances = []
+    for volume in volumes:
+        if volume.get("instance"):
+            if volume["instance"]["state"]["name"] == "stopped":
+                volumes_with_stopped_instances.append(volume)
+
+    return volumes_with_stopped_instances

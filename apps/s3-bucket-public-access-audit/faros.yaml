@@ -1,11 +1,11 @@
-appId: s3-bucket-public-access-setting
+appId: s3-bucket-public-access-audit
 displayName: S3 Buckets With Public Access
 description: Find all s3 buckets that have public access enabled
 handler: app.lambda_handler
 runtime: python3.8
 executionTimeoutInSecs: 60
 author: apps@faros.ai
-location: https://www.github.com/faros-ai/faros-apps/apps/s3-bucket-public-access-setting
+location: https://github.com/faros-ai/faros-apps/tree/master/apps/s3-bucket-public-access-audit
 tags:
   - aws
   - compliance

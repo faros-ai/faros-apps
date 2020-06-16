@@ -5,7 +5,7 @@ handler: app.lambda_handler
 runtime: python3.8
 executionTimeoutInSecs: 60
 author: apps@faros.ai
-location: https://www.github.com/faros-ai/faros-apps/apps/iam-roles-with-missing-policies
+location: https://github.com/faros-ai/faros-apps/tree/master/apps/iam-roles-with-missing-policies
 tags:
   - iam
   - aws

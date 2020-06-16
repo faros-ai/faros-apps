@@ -1,6 +1,5 @@
-import json
-from graphqlclient import GraphQLClient
 from datetime import datetime
+from faros.client import FarosClient
 
 
 def days_diff(date_string):
@@ -8,22 +7,24 @@ def days_diff(date_string):
 
 
 def lambda_handler(event, context):
-    client = GraphQLClient("https://api.faros.ai/v0/graphql")
-    client.inject_token("Bearer {}".format(event["farosToken"]))
+    client = FarosClient.from_event(event)
 
     query = '''{
-              acm_certificateDetail {
-                data {
-                  certificateArn
-                  notAfter
-                  farosAccountId
-                  farosRegionId
+              aws {
+                acm {
+                  certificateDetail {
+                    data {
+                      farosAccountId
+                      farosRegionId
+                      certificateArn
+                      notAfter
+                    }
+                  }
                 }
               }
             }'''
 
-    response = client.execute(query)
-    response_json = json.loads(response)
-    certificates = response_json["data"]["acm_certificateDetail"]["data"]
+    response = client.graphql_query(query)
+    certificates = response["aws"]["acm"]["certificateDetail"]["data"]
     cutoff = int(event["params"]["days_left"])
     return [c for c in certificates if days_diff(c["notAfter"]) < cutoff]

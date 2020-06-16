@@ -1,5 +1,5 @@
 import json
-from graphqlclient import GraphQLClient
+from faros.client import FarosClient
 
 
 def check_subnets(subnets, count):
@@ -7,23 +7,25 @@ def check_subnets(subnets, count):
 
 
 def lambda_handler(event, context):
-    client = GraphQLClient("https://api.faros.ai/v0/graphql")
-    client.inject_token("Bearer {}".format(event["farosToken"]))
+    client = FarosClient.from_event(event)
 
     query = '''{
-              ec2_subnet {
-                data {
-                  subnetId
-                  availableIpAddressCount
-                  farosAccountId
-                  farosRegionId                  
+              aws {
+                ec2 {
+                  subnet {
+                    data {
+                      farosAccountId
+                      farosRegionId
+                      subnetId
+                      availableIpAddressCount
+                    }
+                  }
                 }
               }
             }'''
 
-    response = client.execute(query)
-    response_json = json.loads(response)
-    subnets = response_json["data"]["ec2_subnet"]["data"]
+    response = client.graphql_query(query)
+    subnets = response["aws"]["ec2"]["subnet"]["data"]
     count = int(event["params"]["ip_count"])
     return [
       subnet for subnet in subnets

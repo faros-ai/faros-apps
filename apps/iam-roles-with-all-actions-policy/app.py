@@ -1,5 +1,5 @@
 import json
-from graphqlclient import GraphQLClient
+from faros.client import FarosClient
 from urllib.parse import unquote
 
 
@@ -43,25 +43,27 @@ def full_star_policy(policy_list):
 
 
 def lambda_handler(event, context):
-    client = GraphQLClient("https://api.faros.ai/v0/graphql")
-    client.inject_token("Bearer {}".format(event["farosToken"]))
+    client = FarosClient.from_event(event)
 
     query = """{
-              iam_roleDetail {
-                data {
-                  roleId
-                  roleName
-                  rolePolicyList {
-                    policyName
-                    policyDocument
+              aws {
+                iam {
+                  roleDetail {
+                    data {
+                      farosAccountId
+                      farosRegionId
+                      roleId
+                      roleName
+                      rolePolicyList {
+                        policyName
+                        policyDocument
+                      }
+                    }
                   }
-                  farosAccountId
-                  farosRegionId
-                }      
+                }
               }
             }"""
 
-    response = client.execute(query)
-    response_json = json.loads(response)
-    roles = response_json["data"]["iam_roleDetail"]["data"]
+    response = client.graphql_query(query)
+    roles = response["aws"]["iam"]["roleDetail"]["data"]
     return [r for r in roles if full_star_policy(r["rolePolicyList"])]

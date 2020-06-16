@@ -1,5 +1,4 @@
-import json
-from graphqlclient import GraphQLClient
+from faros.client import FarosClient
 from datetime import datetime
 
 
@@ -12,30 +11,32 @@ def has_old_access_keys(access_keys, max_days):
 
 
 def lambda_handler(event, context):
-    client = GraphQLClient("https://api.faros.ai/v0/graphql")
-    client.inject_token("Bearer {}".format(event["farosToken"]))
+    client = FarosClient.from_event(event)
 
     query = '''{
-              iam_userDetail {
-                data {
-                  userId
-                  userName
-                  accessKeys {
+              aws {
+                iam {
+                  userDetail {
                     data {
-                      status
-                      createDate
-                      accessKeyId
+                      farosAccountId
+                      farosRegionId
+                      userId
+                      userName
+                      accessKeys {
+                        data {
+                          status
+                          createDate
+                          accessKeyId
+                        }
+                      }
                     }
                   }
-                  farosAccountId
-                  farosRegionId
                 }
               }
             }'''
 
-    response = client.execute(query)
-    response_json = json.loads(response)
-    users = response_json["data"]["iam_userDetail"]["data"]
+    response = client.graphql_query(query)
+    users = response["aws"]["iam"]["userDetail"]["data"]
     old_access_keys = []
     cutoff = int(event["params"]["max_days"])
     for user in users:

@@ -3,7 +3,7 @@ displayName: Unencrypted EBS Volumes
 description: Find all EBS volumes that are not encrypted
 handler: app.lambda_handler
 runtime: python3.8
-executionTimeoutInSecs: 10
+executionTimeoutInSecs: 60
 author: apps@faros.ai
 location: https://www.github.com/faros-ai/faros-apps/apps/ec2-unencrypted-ebs-volumes
 tags:

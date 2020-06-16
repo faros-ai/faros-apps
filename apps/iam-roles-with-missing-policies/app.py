@@ -1,5 +1,4 @@
-import json
-from graphqlclient import GraphQLClient
+from faros.client import FarosClient
 
 
 def get_missing_policies(required, attached):
@@ -7,27 +6,29 @@ def get_missing_policies(required, attached):
 
 
 def lambda_handler(event, context):
-    client = GraphQLClient("https://api.faros.ai/v0/graphql")
-    client.inject_token("Bearer {}".format(event["farosToken"]))
+    client = FarosClient.from_event(event)
 
     query = """{
-              iam_roleDetail {
-                data {
-                  roleId
-                  roleName
-                  attachedManagedPolicies {
-                    policyName
-                    policyArn
+              aws {
+                iam {
+                  roleDetail {
+                    data {
+                      farosAccountId
+                      farosRegionId
+                      roleId
+                      roleName
+                      attachedManagedPolicies {
+                        policyArn
+                        policyName
+                      }
+                    }
                   }
-                  farosAccountId
-                  farosRegionId                  
-                }      
+                }
               }
             }"""
 
-    response = client.execute(query)
-    response_json = json.loads(response)
-    roles = response_json["data"]["iam_roleDetail"]["data"]
+    response = client.graphql_query(query)
+    roles = response["aws"]["iam"]["roleDetail"]["data"]
     required_policy_arns = event["params"]["required_policy_arns"].split(",")
     roles_without_policies = []
     for role in roles:

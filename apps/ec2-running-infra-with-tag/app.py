@@ -1,40 +1,41 @@
 # Lists VMs and EBS volumes (in running state) by tag
-import json
-from graphqlclient import GraphQLClient
+from faros.client import FarosClient
 
 
 def lambda_handler(event, context):
-    client = GraphQLClient("https://api.faros.ai/v0/graphql")
-    client.inject_token("Bearer " + event["farosToken"])
+    client = FarosClient.from_event(event)
 
     query = '''{
-            ec2_instance {
-              data {
-                farosAccountId
-                farosRegionId
-                instanceId
-                instanceType
-                state {
-                  name
-                }
-                tags {
-                  key
-                  value
-                }
-                volumes {
-                  data {
-                    volumeType
-                    size
+              aws {
+                ec2 {
+                  instance {
+                    data {
+                      farosAccountId
+                      farosRegionId
+                      instanceId
+                      instanceType
+                      state {
+                        name
+                      }
+                      tags {
+                        key
+                        value
+                      }
+                      volumes {
+                        data {
+                          size
+                          volumeType
+                        }
+                      }
+                    }
                   }
                 }
               }
-            }
-    }'''
+            }'''
 
-    response = client.execute(query)
-    response_json = json.loads(response)
+    response = client.graphql_query(query)
 
-    instances = response_json["data"]["ec2_instance"]["data"]
+    instances = response["aws"]["ec2"]["instance"]["data"]
     infra = []
     for i in instances:
         if i["state"]["name"] == "running":

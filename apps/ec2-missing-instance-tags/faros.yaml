@@ -3,7 +3,7 @@ displayName: Missing EC2 Tags
 description: Find all EC2 instances that are missing any of the tags specified in the <keys> input list
 handler: app.lambda_handler
 runtime: python3.8
-executionTimeoutInSecs: 10
+executionTimeoutInSecs: 60
 author: apps@faros.ai
 location: https://www.github.com/faros-ai/faros-apps/apps/ec2-missing-instance-tags
 tags:

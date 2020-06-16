@@ -5,11 +5,10 @@ description: >-
   If the parameter is not supplied return buckets without any policies defined.
 handler: app.lambda_handler
 runtime: python3.8
-executionTimeoutInSecs: 10
+executionTimeoutInSecs: 60
 author: apps@faros.ai
 location: https://www.github.com/faros-ai/faros-apps/apps/s3-missing-bucket-policy
 tags:
   - aws
-  - compliance
   - s3
   - security

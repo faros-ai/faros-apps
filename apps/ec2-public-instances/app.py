@@ -1,23 +1,25 @@
 import json
-from graphqlclient import GraphQLClient
+from faros.client import FarosClient
 
 
 def lambda_handler(event, context):
-    client = GraphQLClient("https://api.faros.ai/v0/graphql")
-    client.inject_token("Bearer {}".format(event["farosToken"]))
+    client = FarosClient.from_event(event)
 
     query = '''{
-              ec2_instance {
-                data {
-                  instanceId
-                  publicIpAddress
-                  farosAccountId
-                  farosRegionId                  
+              aws {
+                ec2 {
+                  instance {
+                    data {
+                      farosAccountId
+                      farosRegionId
+                      instanceId
+                      publicIpAddress
+                    }
+                  }
                 }
               }
             }'''
 
-    response = client.execute(query)
-    response_json = json.loads(response)
-    instances = response_json["data"]["ec2_instance"]["data"]
+    response = client.graphql_query(query)
+    instances = response["aws"]["ec2"]["instance"]["data"]
     return [i for i in instances if i["publicIpAddress"] is not None]

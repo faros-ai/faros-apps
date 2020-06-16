@@ -1,5 +1,4 @@
-import json
-from graphqlclient import GraphQLClient
+from faros.client import FarosClient
 
 
 def missing_tags(instance_tags, volume_tags):
@@ -7,33 +6,35 @@ def missing_tags(instance_tags, volume_tags):
 
 
 def lambda_handler(event, context):
-    client = GraphQLClient("https://api.faros.ai/v0/graphql")
-    client.inject_token("Bearer {}".format(event["farosToken"]))
+    client = FarosClient.from_event(event)
 
     query = '''{
-              ec2_volume {
-                data {
-                  volumeId
-                  tags {
-                    key
-                    value
-                  }
-                  state
-                  instance {
-                    tags {
-                      key
-                      value
+              aws {
+                ec2 {
+                  volume {
+                    data {
+                      farosAccountId
+                      farosRegionId
+                      volumeId
+                      tags {
+                        key
+                        value
+                      }
+                      state
+                      instance {
+                        tags {
+                          key
+                          value
+                        }
+                      }
                     }
                   }
-                  farosAccountId
-                  farosRegionId                  
-                }            
+                }
               }
             }'''
 
-    response = client.execute(query)
-    response_json = json.loads(response)
-    volumes = response_json["data"]["ec2_volume"]["data"]
+    response = client.graphql_query(query)
+    volumes = response["aws"]["ec2"]["volume"]["data"]
     volumes_with_missing_tags = []
     for v in volumes:
         if v["state"] == "in-use":

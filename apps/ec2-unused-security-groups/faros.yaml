@@ -3,11 +3,10 @@ displayName: Unused Security Groups
 description: Find all security groups that are not attached to instances
 handler: app.lambda_handler
 runtime: python3.8
-executionTimeoutInSecs: 10
+executionTimeoutInSecs: 60
 author: apps@faros.ai
 location: https://www.github.com/faros-ai/faros-apps/apps/ec2-unused-security-groups
 tags:
   - aws
-  - compliance
   - ec2
   - security

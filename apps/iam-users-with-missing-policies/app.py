@@ -1,5 +1,4 @@
-import json
-from graphqlclient import GraphQLClient
+from faros.client import FarosClient
 
 
 def get_policy_arns(user):
@@ -14,37 +13,39 @@ def get_missing_policies(required, attached):
 
 
 def lambda_handler(event, context):
-    client = GraphQLClient("https://api.faros.ai/v0/graphql")
-    client.inject_token("Bearer {}".format(event["farosToken"]))
+    client = FarosClient.from_event(event)
 
     query = """{
-              iam_userDetail {
-                data {
-                  userId
-                  userName
-                  attachedManagedPolicies {
-                    policyName
-                    policyArn
-                  }
-                  groups {
+              aws {
+                iam {
+                  userDetail {
                     data {
-                      groupId
-                      groupName
+                      farosAccountId
+                      farosRegionId
+                      userId
+                      userName
                       attachedManagedPolicies {
-                        policyName
                         policyArn
+                        policyName
+                      }
+                      groups {
+                        data {
+                          groupId
+                          groupName
+                          attachedManagedPolicies {
+                            policyArn
+                            policyName
+                          }
+                        }
                       }
                     }
                   }
-                  farosAccountId
-                  farosRegionId
                 }
               }
             }"""
 
-    response = client.execute(query)
-    response_json = json.loads(response)
-    users = response_json["data"]["iam_userDetail"]["data"]
+    response = client.graphql_query(query)
+    users = response["aws"]["iam"]["userDetail"]["data"]
     users_without_policies = []
     required_policy_arns = event["params"]["required_policy_arns"].split(",")
 

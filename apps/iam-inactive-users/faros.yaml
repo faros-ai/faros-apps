@@ -3,7 +3,7 @@ displayName: Inactive IAM Users
 description: Find any IAM users who haven't used their password in over <parameter max_days> days
 handler: app.lambda_handler
 runtime: python3.8
-executionTimeoutInSecs: 10
+executionTimeoutInSecs: 60
 author: apps@faros.ai
 location: https://www.github.com/faros-ai/faros-apps/apps/iam-inactive-users
 tags:

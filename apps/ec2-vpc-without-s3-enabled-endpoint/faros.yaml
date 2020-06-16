@@ -1,9 +1,9 @@
-appId: vpc-without-s3-enabled-endpont
+appId: ec2-vpc-without-s3-enabled-endpoint
 displayName: VPC Endpoint S3 Not Attached
 description: Find all VPCs that do not have a VPC endpoint enabled to access s3
 handler: app.lambda_handler
 runtime: python3.8
-executionTimeoutInSecs: 10
+executionTimeoutInSecs: 60
 author: apps@faros.ai
 location: https://www.github.com/faros-ai/faros-apps/apps/ec2-vpc-without-s3-enabled-endpoint
 tags:

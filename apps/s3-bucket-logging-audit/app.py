@@ -1,30 +1,30 @@
-import json
-from graphqlclient import GraphQLClient
+from faros.client import FarosClient
 
 
 def lambda_handler(event, context):
-    client = GraphQLClient("https://api.faros.ai/v0/graphql")
-    client.inject_token("Bearer {}".format(event["farosToken"]))
+    client = FarosClient.from_event(event)
 
     query = '''{
-              s3_bucket {
-                after
-                data {
-                  farosAccountId
-                  farosRegionId
-                  name
-                  logging {
-                    loggingEnabled {
-                      targetBucket
+              aws {
+                s3 {
+                  bucket {
+                    data {
+                      farosAccountId
+                      farosRegionId
+                      name
+                      logging {
+                        loggingEnabled {
+                          targetBucket
+                        }
+                      }
                     }
                   }
                 }
               }
             }'''
 
-    response = client.execute(query)
-    response_json = json.loads(response)
-    buckets = response_json["data"]["s3_bucket"]["data"]
+    response = client.graphql_query(query)
+    buckets = response["aws"]["s3"]["bucket"]["data"]
 
     return [
         {

@@ -3,7 +3,7 @@ displayName: Expiring ACM Certificates
 description: Find any acm certificates which expire in <days_left> days
 handler: app.lambda_handler
 runtime: python3.8
-executionTimeoutInSecs: 10
+executionTimeoutInSecs: 60
 author: apps@faros.ai
 location: https://www.github.com/faros-ai/faros-apps/apps/acm-expiring-certificates
 tags:

@@ -1,5 +1,4 @@
-import json
-from graphqlclient import GraphQLClient
+from faros.client import FarosClient
 
 
 def get_all_functions(functions):
@@ -11,25 +10,27 @@ def get_all_functions(functions):
 
 
 def lambda_handler(event, context):
-    client = GraphQLClient("https://api.faros.ai/v0/graphql")
-    client.inject_token("Bearer {}".format(event["farosToken"]))
+    client = FarosClient.from_event(event)
 
     query = '''{
-              lambda_functionConfiguration {
-                data {
-                  functionArn
-                  functionName
-                  deadLetterConfig {
-                    targetArn
+              aws {
+                lambda {
+                  functionConfiguration {
+                    data {
+                      farosAccountId
+                      farosRegionId
+                      functionName
+                      functionArn
+                      deadLetterConfig {
+                        targetArn
+                      }
+                    }
                   }
-                  farosAccountId
-                  farosRegionId                  
                 }
               }
             }'''
 
-    response = client.execute(query)
-    response_json = json.loads(response)
-    functions = response_json["data"]["lambda_functionConfiguration"]["data"]
+    response = client.graphql_query(query)
+    functions = response["aws"]["lambda"]["functionConfiguration"]["data"]
 
     return [f for f in functions if not f["deadLetterConfig"]["targetArn"]]

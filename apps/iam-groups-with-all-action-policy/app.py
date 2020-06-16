@@ -1,5 +1,6 @@
 import json
-from graphqlclient import GraphQLClient
+
+from faros.client import FarosClient
 from urllib.parse import unquote
 
 
@@ -32,8 +33,8 @@ def full_star_doc(doc):
     return False
 
 
-def full_star_policy(policyList):
-    for policy in policyList:
+def full_star_policy(policy_list):
+    for policy in policy_list:
         for doc in policy["policyDocument"]:
             decoded_doc = json.loads(unquote(doc))
             if full_star_doc(decoded_doc):
@@ -43,25 +44,27 @@ def full_star_policy(policyList):
 
 
 def lambda_handler(event, context):
-    client = GraphQLClient("https://api.faros.ai/v0/graphql")
-    client.inject_token("Bearer {}".format(event["farosToken"]))
+    client = FarosClient.from_event(event)
 
     query = """{
-              iam_groupDetail {
-                data {
-                  groupId
-                  groupName
-                  groupPolicyList {
-                    policyName
-                    policyDocument
+              aws {
+                iam {
+                  groupDetail {
+                    data {
+                      farosAccountId
+                      farosRegionId
+                      groupName
+                      groupId
+                      groupPolicyList {
+                        policyDocument
+                        policyName
+                      }
+                    }
                   }
-                  farosAccountId
-                  farosRegionId                  
                 }
               }
             }"""
 
-    response = client.execute(query)
-    response_json = json.loads(response)
-    groups = response_json["data"]["iam_groupDetail"]["data"]
+    response = client.graphql_query(query)
+    groups = response["aws"]["iam"]["groupDetail"]["data"]
     return [g for g in groups if full_star_policy(g["groupPolicyList"])]

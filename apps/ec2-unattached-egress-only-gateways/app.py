@@ -1,25 +1,25 @@
-import json
-from graphqlclient import GraphQLClient
+from faros.client import FarosClient
 
 
 def lambda_handler(event, context):
-    client = GraphQLClient("https://api.faros.ai/v0/graphql")
-    client.inject_token("Bearer {}".format(event["farosToken"]))
+    client = FarosClient.from_event(event)
 
     query = '''{
-              ec2_egressOnlyInternetGateway {
-                data {
-                  egressOnlyInternetGatewayId
-                  attachments {
-                    vpcId
+              aws {
+                ec2 {
+                  egressOnlyInternetGateway {
+                    data {
+                      farosAccountId
+                      farosRegionId
+                      attachments {
+                        vpcId
+                      }
+                    }
                   }
-                  farosAccountId
-                  farosRegionId
                 }
               }
             }'''
 
-    response = client.execute(query)
-    response_json = json.loads(response)
-    gateways = response_json["data"]["ec2_egressOnlyInternetGateway"]["data"]
+    response = client.graphql_query(query)
+    gateways = response["aws"]["ec2"]["egressOnlyInternetGateway"]["data"]
     return [g for g in gateways if not g["attachments"]]

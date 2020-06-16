@@ -1,5 +1,4 @@
-import json
-from graphqlclient import GraphQLClient
+from faros.client import FarosClient
 
 
 def check_for_policies(user, policy_arn):
@@ -17,31 +16,38 @@ def check_for_policies(user, policy_arn):
 
     return ret
 
+
 def format_output(user, policies):
     del policies["compliant"]
-    return { "userId": user["userId"], "userName": user["userName"], "accountId": user["farosAccountId"], "sources": policies }
+    return {"userId": user["userId"], "userName": user["userName"], "accountId": user["farosAccountId"],
+            "sources": policies}
+
 
 def lambda_handler(event, context):
-    client = GraphQLClient("https://api.faros.ai/v0/graphql")
-    client.inject_token("Bearer {}".format(event["farosToken"]))
+    client = FarosClient.from_event(event)
 
     query = """{
-              iam_userDetail {
-                data {
-                  userId
-                  userName
-                  farosAccountId
-                  attachedManagedPolicies {
-                    policyName
-                    policyArn
-                  }
-                  groups {
+              aws {
+                iam {
+                  userDetail {
                     data {
-                      groupId
-                      groupName
+                      farosAccountId
+                      farosRegionId
+                      userId
+                      userName
                       attachedManagedPolicies {
-                        policyName
                         policyArn
+                        policyName
+                      }
+                      groups {
+                        data {
+                          groupId
+                          groupName
+                          attachedManagedPolicies {
+                            policyArn
+                            policyName
+                          }
+                        }
                       }
                     }
                   }
@@ -49,9 +55,8 @@ def lambda_handler(event, context):
               }
             }"""
 
-    response = client.execute(query)
-    response_json = json.loads(response)
-    users = response_json["data"]["iam_userDetail"]["data"]
+    response = client.graphql_query(query)
+    users = response["aws"]["iam"]["userDetail"]["data"]
 
     bad_policy_users = [(u, check_for_policies(u, event["params"]["forbidden_policy_arn"])) for u in users]
     return [format_output(u, p) for (u, p) in bad_policy_users if not p["compliant"]]

@@ -1,5 +1,4 @@
-import json
-from graphqlclient import GraphQLClient
+from faros.client import FarosClient
 
 
 def check_statement(policies):
@@ -11,23 +10,25 @@ def check_statement(policies):
 
 
 def lambda_handler(event, context):
-    client = GraphQLClient("https://api.faros.ai/v0/graphql")
-    client.inject_token("Bearer {}".format(event["farosToken"]))
+    client = FarosClient.from_event(event)
 
     query = '''{
-              ec2_vpcEndpoint {
-                data {
-                  vpcId
-                  policyDocument
-                  farosAccountId
-                  farosRegionId
+              aws {
+                ec2 {
+                  vpcEndpoint {
+                    data {
+                      farosAccountId
+                      farosRegionId
+                      vpcId
+                      policyDocument
+                    }
+                  }
                 }
               }
             }'''
 
-    response = client.execute(query)
-    response_json = json.loads(response)
-    endpoints = response_json["data"]["ec2_vpcEndpoint"]["data"]
+    response = client.graphql_query(query)
+    endpoints = response["aws"]["ec2"]["vpcEndpoint"]["data"]
     return [
       e for e in endpoints
       if check_statement(e["policyDocument"]["Statement"])

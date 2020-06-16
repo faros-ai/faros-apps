@@ -1,5 +1,5 @@
 import json
-from graphqlclient import GraphQLClient
+from faros.client import FarosClient
 from urllib.parse import unquote
 
 
@@ -8,6 +8,7 @@ def has_full_star_policy(user):
     group_full_star_policies = [p for g in user["groups"]["data"] for p in g["groupPolicyList"] if full_star_policy(p)]
     user_full_star_policies.extend(group_full_star_policies)
     return user_full_star_policies
+
 
 def full_star_doc(doc):
     statements = doc["Statement"]
@@ -38,54 +39,52 @@ def full_star_doc(doc):
     return False
 
 
-def full_star_policy(policyList):
-    for policy in policyList:
-        for doc in policy["policyDocument"]:
-            decoded_doc = json.loads(unquote(doc))
-            if full_star_doc(decoded_doc):
-                return True
-
-    return False
+def full_star_policy(policy):
+    doc = policy["policyDocument"]
+    decoded_doc = json.loads(unquote(doc))
+    return full_star_doc(decoded_doc)
 
 
 def lambda_handler(event, context):
-    client = GraphQLClient("https://api.faros.ai/v0/graphql")
-    client.inject_token("Bearer {}".format(event["farosToken"]))
+    client = FarosClient.from_event(event)
 
     query = """{
-              iam_userDetail {
-                data {
-                  userId
-                  userName
-                  attachedManagedPolicies {
-                    policyName
-                    policyArn
-                  }
-                  userPolicyList {
-                    policyName
-                    policyDocument
-                  }
-                  groups {
+              aws {
+                iam {
+                  userDetail {
                     data {
-                      groupId
-                      groupName
+                      farosAccountId
+                      farosRegionId
+                      userId
+                      userName
                       attachedManagedPolicies {
-                        policyName
                         policyArn
+                        policyName
                       }
-                      groupPolicyList {
+                      userPolicyList {
                         policyName
                         policyDocument
                       }
+                      groups {
+                        data {
+                          groupId
+                          groupName
+                          attachedManagedPolicies {
+                            policyArn
+                            policyName
+                          }
+                          groupPolicyList {
+                            policyName
+                            policyDocument
+                          }
+                        }
+                      }
                     }
                   }
-                  farosAccountId
-                  farosRegionId
                 }
               }
             }"""
 
-    response = client.execute(query)
-    response_json = json.loads(response)
-    users = response_json["data"]["iam_userDetail"]["data"]
+    response = client.graphql_query(query)
+    users = response["aws"]["iam"]["userDetail"]["data"]
     return [u for u in users if has_full_star_policy(u)]

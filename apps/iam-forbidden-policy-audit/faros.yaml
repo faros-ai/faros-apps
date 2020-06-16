@@ -3,7 +3,7 @@ displayName: Forbidden Policy Audit
 description: Find the IAM users who have the policy arns in the <parameter forbidden_policy_arn> attached either directly or through a group
 handler: app.lambda_handler
 runtime: python3.8
-executionTimeoutInSecs: 10
+executionTimeoutInSecs: 60
 author: apps@faros.ai
 location: https://www.github.com/faros-ai/faros-apps/apps/iam-forbidden-policy-audit
 tags:

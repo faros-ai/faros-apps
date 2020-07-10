@@ -1,0 +1,12 @@
+appId: github-open-unassigned-issues
+displayName: Github Open Issues
+description: Find Github open issues without labels, assignees, attached pull requests.
+handler: app.lambda_handler
+runtime: python3.8
+executionTimeoutInSecs: 60
+author: apps@faros.ai
+location: https://github.com/faros-ai/faros-apps/tree/master/apps/github-open-unassigned-issues
+tags:
+  - github
+  - product development
+  - project management

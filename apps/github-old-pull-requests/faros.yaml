@@ -1,0 +1,11 @@
+appId: github-old-pull-requests
+displayName: Github Old Pull Requests
+description: Find Github pull requests that have been open for longer than <parameter max_days> days
+handler: app.lambda_handler
+runtime: python3.8
+executionTimeoutInSecs: 60
+author: apps@faros.ai
+location: https://github.com/faros-ai/faros-apps/tree/master/apps/github-old-pull-requests
+tags:
+  - github
+  - project management

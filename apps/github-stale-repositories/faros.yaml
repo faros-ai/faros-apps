@@ -1,0 +1,11 @@
+appId: github-stale-repositories
+displayName: Github Stale Repositories
+description: Find Github repositores that have no activity over <parameter max_days> days
+handler: app.lambda_handler
+runtime: python3.8
+executionTimeoutInSecs: 60
+author: apps@faros.ai
+location: https://github.com/faros-ai/faros-apps/tree/master/apps/github-stale-repositories
+tags:
+  - github
+  - project management

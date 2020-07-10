@@ -1,0 +1,14 @@
+appId: iam-user-details-diff
+displayName: IAM Users Details Diff
+description: >-
+  Compares all user details data between two users (<ref_user_id> and <new_user_id>) and returns the
+  differences.
+handler: app.lambda_handler
+runtime: python3.8
+executionTimeoutInSecs: 60
+author: apps@faros.ai
+tags:
+  - aws
+  - iam
+  - diff
+location: 'https://github.com/faros-ai/faros-apps/tree/master/apps/iam-user-details-diff'

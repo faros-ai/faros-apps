@@ -1,0 +1,11 @@
+appId: github-stale-branches
+displayName: Github Stale Branches
+description: Find Github branches that have no activity, have been merged into the default branch over <parameter max_days> days
+handler: app.lambda_handler
+runtime: python3.8
+executionTimeoutInSecs: 60
+author: apps@faros.ai
+location: https://github.com/faros-ai/faros-apps/tree/master/apps/github-stale-branches
+tags:
+  - github
+  - project management

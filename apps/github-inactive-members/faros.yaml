@@ -1,0 +1,11 @@
+appId: github-inactive-members
+displayName: Github Inactive Members
+description: Find Github members who haven't contributed to the repositories for longer than <parameter max_days> days
+handler: app.lambda_handler
+runtime: python3.8
+executionTimeoutInSecs: 60
+author: apps@faros.ai
+location: https://github.com/faros-ai/faros-apps/tree/master/apps/github-inactive-members
+tags:
+  - github
+  - security

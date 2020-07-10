@@ -1,6 +1,6 @@
-import json
 from faros.client import FarosClient
 from faros.utils import DiffObj, diff_objects
+
 
 def lambda_handler(event, context):
     client = FarosClient.from_event(event)

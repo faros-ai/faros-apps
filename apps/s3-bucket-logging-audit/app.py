@@ -23,7 +23,7 @@ def lambda_handler(event, context):
               }
             }'''
 
-    response = client.graphql_query(query)
+    response = client.graphql_execute(query)
     buckets = response["aws"]["s3"]["bucket"]["data"]
 
     return [

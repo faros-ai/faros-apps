@@ -33,6 +33,6 @@ def lambda_handler(event, context):
               }
             }'''
 
-    response = client.graphql_query(query)
+    response = client.graphql_execute(query)
     policies = response["aws"]["iam"]["roleDetail"]["data"]
     return [p for p in policies if check_policies(p["rolePolicyList"])]

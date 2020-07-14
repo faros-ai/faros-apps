@@ -26,7 +26,7 @@ def lambda_handler(event, context):
               }
             }'''
 
-    response = client.graphql_query(query)
+    response = client.graphql_execute(query)
     instances = response["aws"]["ec2"]["instance"]["data"]
     required_keys = frozenset(event["params"]["keys"].split(","))
     tagless_instances = [{"instance": i, "missingKeys": missing_tags(

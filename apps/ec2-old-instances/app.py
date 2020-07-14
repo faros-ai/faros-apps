@@ -27,7 +27,7 @@ def lambda_handler(event, context):
               }
             }'''
 
-    response = client.graphql_query(query)
+    response = client.graphql_execute(query)
     instances = response["aws"]["ec2"]["instance"]["data"]
     cutoff = int(event["params"]["num_days"])
     return [

@@ -1,12 +1,11 @@
-from graphqlclient import GraphQLClient
+from faros.client import FarosClient
 from jinja2 import Environment, FileSystemLoader
 import os
 import json
 
 
 def lambda_handler(event, context):
-    client = GraphQLClient("https://api.faros.ai/v0/graphql")
-    client.inject_token("Bearer " + event["farosToken"])
+    client = FarosClient.from_event(event)
     params = event['params']
     report_name = params['report_name']
     recipient = params['recipient']
@@ -41,7 +40,5 @@ def lambda_handler(event, context):
         "htmlBody": html
     }
 
-    response = client.execute(query, variables)
-    response_json = json.loads(response)
-
-    return { "data" : response_json }
+    response = client.graphql_execute(query, variables)
+    return response

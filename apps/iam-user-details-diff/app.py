@@ -56,7 +56,7 @@ def lambda_handler(event, context):
     ref_user_id = event["params"]["ref_user_id"]
     new_user_id = event["params"]["new_user_id"]
 
-    response = client.graphql_query(query)
+    response = client.graphql_execute(query)
 
     data = response["aws"]["iam"]["userDetail"]["data"]
 

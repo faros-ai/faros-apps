@@ -22,7 +22,7 @@ def lambda_handler(event, context):
               }
             }'''
 
-    response = client.graphql_query(query)
+    response = client.graphql_execute(query)
     pull_requests = response["github"]["pullRequest"]["data"]
     cutoff = int(event["params"]["max_days"])
 

@@ -31,7 +31,7 @@ def lambda_handler(event, context):
               }
             }'''
 
-    response = client.graphql_query(query)
+    response = client.graphql_execute(query)
     vpcs = response["aws"]["ec2"]["vpc"]["data"]
 
     non_compliant_vpcs = [

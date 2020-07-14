@@ -33,7 +33,7 @@ def lambda_handler(event, context):
               }
             }'''
 
-    response = client.graphql_query(query)
+    response = client.graphql_execute(query)
     volumes = response["aws"]["ec2"]["volume"]["data"]
     volumes_with_missing_tags = []
     for v in volumes:

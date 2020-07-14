@@ -27,7 +27,7 @@ def lambda_handler(event, context):
               }
             }"""
 
-    response = client.graphql_query(query)
+    response = client.graphql_execute(query)
     roles = response["aws"]["iam"]["roleDetail"]["data"]
     required_policy_arns = event["params"]["required_policy_arns"].split(",")
     roles_without_policies = []

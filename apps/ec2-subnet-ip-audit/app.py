@@ -24,7 +24,7 @@ def lambda_handler(event, context):
               }
             }'''
 
-    response = client.graphql_query(query)
+    response = client.graphql_execute(query)
     subnets = response["aws"]["ec2"]["subnet"]["data"]
     count = int(event["params"]["ip_count"])
     return [

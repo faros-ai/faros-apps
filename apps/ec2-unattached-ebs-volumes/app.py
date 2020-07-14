@@ -25,6 +25,6 @@ def lambda_handler(event, context):
               }
             }'''
 
-    response = client.graphql_query(query)
+    response = client.graphql_execute(query)
     volumes = response["aws"]["ec2"]["volume"]["data"]
     return [v for v in volumes if not v["attachments"]]

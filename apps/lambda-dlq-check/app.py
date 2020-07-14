@@ -30,7 +30,7 @@ def lambda_handler(event, context):
               }
             }'''
 
-    response = client.graphql_query(query)
+    response = client.graphql_execute(query)
     functions = response["aws"]["lambda"]["functionConfiguration"]["data"]
 
     return [f for f in functions if not f["deadLetterConfig"]["targetArn"]]

@@ -55,7 +55,7 @@ def lambda_handler(event, context):
               }
             }"""
 
-    response = client.graphql_query(query)
+    response = client.graphql_execute(query)
     users = response["aws"]["iam"]["userDetail"]["data"]
 
     bad_policy_users = [(u, check_for_policies(u, event["params"]["forbidden_policy_arn"])) for u in users]

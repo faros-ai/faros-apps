@@ -24,7 +24,7 @@ def lambda_handler(event, context):
               }
             }'''
 
-    response = client.graphql_query(query)
+    response = client.graphql_execute(query)
     certificates = response["aws"]["acm"]["certificateDetail"]["data"]
     cutoff = int(event["params"]["days_left"])
     return [c for c in certificates if days_diff(c["notAfter"]) < cutoff]

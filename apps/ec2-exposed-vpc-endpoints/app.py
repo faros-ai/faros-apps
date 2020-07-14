@@ -27,7 +27,7 @@ def lambda_handler(event, context):
               }
             }'''
 
-    response = client.graphql_query(query)
+    response = client.graphql_execute(query)
     endpoints = response["aws"]["ec2"]["vpcEndpoint"]["data"]
     return [
       e for e in endpoints

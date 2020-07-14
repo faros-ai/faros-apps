@@ -1,2 +1,2 @@
-graphqlclient==0.2.4
+faros==0.2.*
 jinja2==2.11.2

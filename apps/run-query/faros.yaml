@@ -1,0 +1,13 @@
+appId: run-query
+displayName: Run persisted query
+description: >-
+  This app runs the persisted query keyed by <parameter key> and returns its
+  results.
+handler: app.lambda_handler
+runtime: python3.8
+executionTimeoutInSecs: 60
+author: apps@faros.ai
+location: https://github.com/faros-ai/faros-apps/tree/master/apps/actions/run-query
+tags:
+  - actions
+  - query

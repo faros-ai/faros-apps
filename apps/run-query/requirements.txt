@@ -1,0 +1,3 @@
+faros==0.2.*
+jsonpath-rw-ext==1.2.*
+requests==2.24.*

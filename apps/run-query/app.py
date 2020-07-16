@@ -9,10 +9,12 @@ def lambda_handler(event, context):
     client = FarosClient.from_event(event)
 
     # First, fetch the query from the input key.
-    query_key = event["params"].get("key")
+    query_key = event['params'].get('key')
+    if query_key is None:
+      raise RuntimeError("missing 'key' parameter")
     res = requests.get(QUERY_BASE_URL + query_key)
     if res.status_code == 404: # Nicer error if the query did not exist.
-      raise RuntimeError('no such query: ' + query_key)
+      raise RuntimeError('no such query: {!r}'.format(query_key))
     res.raise_for_status() # Any other error type.
     query = res.json()['query']
 

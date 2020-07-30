@@ -8,6 +8,9 @@ def days_diff(date_string):
 
 def lambda_handler(event, context):
     client = FarosClient.from_event(event)
+    cutoff = int(event["params"]["max_days"])
+    if cutoff < 1:
+        raise ValueError("max days should be a positive integer")
 
     query = '''{
               aws {
@@ -27,7 +30,6 @@ def lambda_handler(event, context):
 
     response = client.graphql_execute(query)
     users = response["aws"]["iam"]["user"]["data"]
-    cutoff = int(event["params"]["max_days"])
     return [
         u for u in users
         if u["passwordLastUsed"] is None or days_diff(u["passwordLastUsed"]) > cutoff

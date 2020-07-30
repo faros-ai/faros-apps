@@ -1,2 +1,4 @@
 faros==0.2.*
 jinja2==2.11.2
+jsonpath_rw_ext
+requests==2.24.*

@@ -12,6 +12,9 @@ def has_old_access_keys(access_keys, max_days):
 
 def lambda_handler(event, context):
     client = FarosClient.from_event(event)
+    cutoff = int(event["params"]["max_days"])
+    if cutoff < 1:
+        raise ValueError("max days should be a positive integer")
 
     query = '''{
               aws {
@@ -38,7 +41,6 @@ def lambda_handler(event, context):
     response = client.graphql_execute(query)
     users = response["aws"]["iam"]["userDetail"]["data"]
     old_access_keys = []
-    cutoff = int(event["params"]["max_days"])
     for user in users:
         old_keys = [key for key in user["accessKeys"]["data"]
                     if key["status"] == "Active" and days_diff(key["createDate"]) > cutoff]

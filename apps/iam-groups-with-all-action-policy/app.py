@@ -35,10 +35,10 @@ def full_star_doc(doc):
 
 def full_star_policy(policy_list):
     for policy in policy_list:
-        for doc in policy["policyDocument"]:
-            decoded_doc = json.loads(unquote(doc))
-            if full_star_doc(decoded_doc):
-                return True
+        doc = policy["policyDocument"]
+        decoded_doc = json.loads(unquote(doc))
+        if full_star_doc(decoded_doc):
+            return True
 
     return False
 

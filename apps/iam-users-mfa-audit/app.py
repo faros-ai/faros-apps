@@ -28,8 +28,8 @@ def lambda_handler(event, context):
     users = response["aws"]["iam"]["userDetail"]["data"]
     return [
         {
-            "name": u["userName"],
-            "id": u["userId"],
+            "userName": u["userName"],
+            "userId": u["userId"],
             "farosAccountId": u["farosAccountId"],
             "farosRegionId": u["farosRegionId"]
         }

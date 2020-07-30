@@ -16,6 +16,7 @@ def lambda_handler(event, context):
                     repo_name
                     locked
                     created_at
+                    updated_at
                     user_login
                     assignee_login
                   }

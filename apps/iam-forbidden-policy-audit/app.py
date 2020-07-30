@@ -25,6 +25,7 @@ def format_output(user, policies):
 
 def lambda_handler(event, context):
     client = FarosClient.from_event(event)
+    forbidden = event["params"]["forbidden_policy_arn"]
 
     query = """{
               aws {
@@ -58,5 +59,5 @@ def lambda_handler(event, context):
     response = client.graphql_execute(query)
     users = response["aws"]["iam"]["userDetail"]["data"]
 
-    bad_policy_users = [(u, check_for_policies(u, event["params"]["forbidden_policy_arn"])) for u in users]
+    bad_policy_users = [(u, check_for_policies(u, forbidden)) for u in users]
     return [format_output(u, p) for (u, p) in bad_policy_users if not p["compliant"]]

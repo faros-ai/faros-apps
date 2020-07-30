@@ -7,6 +7,7 @@ def get_missing_policies(required, attached):
 
 def lambda_handler(event, context):
     client = FarosClient.from_event(event)
+    required_policy_arns = event["params"]["required_policy_arns"].split(",")
 
     query = """{
               aws {
@@ -40,7 +41,7 @@ def lambda_handler(event, context):
                 "roleName": role["roleName"],
                 "farosAccountId": role["farosAccountId"],
                 "farosRegionId": role["farosRegionId"],
-                "missing_policies": missing_policies
+                "missingPolicies": missing_policies
             })
 
     return roles_without_policies

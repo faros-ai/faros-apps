@@ -11,6 +11,7 @@ def lambda_handler(event, context):
                     data {
                       farosAccountId
                       farosRegionId
+                      egressOnlyInternetGatewayId
                       attachments {
                         vpcId
                       }

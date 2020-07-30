@@ -4,6 +4,8 @@ from faros.client import FarosClient
 
 def lambda_handler(event, context):
     client = FarosClient.from_event(event)
+    tag_name = event["params"]["tag_name"]
+    tag_value = event["params"]["tag_value"]
 
     query = '''{
               aws {
@@ -40,7 +42,7 @@ def lambda_handler(event, context):
     for i in instances:
         if i["state"]["name"] == "running":
             for t in i["tags"]:
-                if t["key"] == event["params"]["tag_name"] and t["value"] == event["params"]["tag_value"]:
+                if t["key"] == tag_name and t["value"] == tag_value:
                     infra.append(
                         {
                             "account": i["farosAccountId"],

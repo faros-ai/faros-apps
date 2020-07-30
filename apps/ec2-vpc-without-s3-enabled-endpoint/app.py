@@ -23,6 +23,7 @@ def lambda_handler(event, context):
                         data {
                           state
                           serviceName
+                          vpcEndpointId
                         }
                       }
                     }

@@ -1,4 +1,3 @@
-import json
 from faros.client import FarosClient
 
 

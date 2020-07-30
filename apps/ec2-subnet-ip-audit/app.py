@@ -1,4 +1,3 @@
-import json
 from faros.client import FarosClient
 
 
@@ -8,6 +7,9 @@ def check_subnets(subnets, count):
 
 def lambda_handler(event, context):
     client = FarosClient.from_event(event)
+    count = int(event["params"]["ip_count"])
+    if count < 1:
+        raise ValueError("IP count should be a positive integer")
 
     query = '''{
               aws {
@@ -26,7 +28,6 @@ def lambda_handler(event, context):
 
     response = client.graphql_execute(query)
     subnets = response["aws"]["ec2"]["subnet"]["data"]
-    count = int(event["params"]["ip_count"])
     return [
       subnet for subnet in subnets
       if subnet["availableIpAddressCount"] < count

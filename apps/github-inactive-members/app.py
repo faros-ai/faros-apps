@@ -16,6 +16,7 @@ def has_recent_activity(user, cutoff):
 
 def lambda_handler(event, context):
     client = FarosClient.from_event(event)
+    cutoff = int(event["params"]["max_days"])
 
     query = '''{
               github {
@@ -50,7 +51,6 @@ def lambda_handler(event, context):
 
     response = client.graphql_execute(query)
     users = response["github"]["user"]["data"]
-    cutoff = int(event["params"]["max_days"])
 
     return [
         {

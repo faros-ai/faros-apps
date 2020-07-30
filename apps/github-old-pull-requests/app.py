@@ -4,6 +4,7 @@ from faros.utils import time_diff
 
 def lambda_handler(event, context):
     client = FarosClient.from_event(event)
+    cutoff = int(event["params"]["max_days"])
 
     query = '''{
               github {
@@ -24,7 +25,6 @@ def lambda_handler(event, context):
 
     response = client.graphql_execute(query)
     pull_requests = response["github"]["pullRequest"]["data"]
-    cutoff = int(event["params"]["max_days"])
 
     return [
         p for p in pull_requests

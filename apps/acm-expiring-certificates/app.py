@@ -8,6 +8,9 @@ def days_diff(date_string):
 
 def lambda_handler(event, context):
     client = FarosClient.from_event(event)
+    cutoff = int(event["params"]["days_left"])
+    if cutoff < 1:
+        raise ValueError("Days left should be a positive integer")
 
     query = '''{
               aws {
@@ -26,5 +29,4 @@ def lambda_handler(event, context):
 
     response = client.graphql_execute(query)
     certificates = response["aws"]["acm"]["certificateDetail"]["data"]
-    cutoff = int(event["params"]["days_left"])
     return [c for c in certificates if days_diff(c["notAfter"]) < cutoff]

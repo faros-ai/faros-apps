@@ -33,6 +33,11 @@ jobs:
         run: |
           bash scripts/run_all_unittests.sh
 
+      - name: Set up Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12'
+
       - name: Install Faros client
         run: |
           npm install -g @faros-ai/cli

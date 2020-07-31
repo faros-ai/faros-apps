@@ -8,7 +8,7 @@ def lambda_handler(event, context):
               github {
                 issue {
                   data {
-                    number                
+                    number
                     title
                     state
                     repo_name

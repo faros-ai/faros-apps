@@ -16,6 +16,9 @@ Notes
     To run locally, install the faros cli and script requirements:
         $ npm install -g @faros-ai/cli
         $ pip install -r requirements.txt
+    Create and export Faros API key as explained here - https://www.faros.ai/docs/#/api
+    Export and environment variables as follows:
+        $ export FAROS_API_KEY=<api_key>
 """
 
 import argparse

@@ -1,6 +1,11 @@
 name: CI
 
 on:
+  push:
+    branches:
+    - master
+    paths-ignore:
+      - '**.md'
   pull_request:
     branches:
     - master
@@ -10,6 +15,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - name: Checkout
@@ -36,3 +42,4 @@ jobs:
       - name: Run tests
         run: |
           bash scripts/run_all_unittests.sh
+

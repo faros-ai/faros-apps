@@ -1,1 +1,3 @@
 **.faros/
+__pycache__
+.vscode

@@ -1,6 +1,6 @@
 # Faros Apps
 
-![CI](https://github.com/faros-ai/faros-apps/workflows/CI/badge.svg)
+[![CI](https://github.com/faros-ai/faros-apps/workflows/CI/badge.svg)](https://github.com/faros-ai/faros-apps/actions?query=workflow%3ACI)
 
 A repository of operational applications for optimizing cloud costs, security, compliance, and more, built on the <a href="https://www.faros.ai">Faros Platform</a>.
 

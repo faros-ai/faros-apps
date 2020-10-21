@@ -1,0 +1,16 @@
+
+appId: output-emailer
+displayName: Output Emailer
+description: >-
+  This app takes a collection of records (like the output of the apps), renders
+  it inside HTML tables and sends an email to a configurable recipient. It
+  expects two parameters (recipient, the recipient's email address;
+  report_name, the email's subject) and reads an array of objects as data.
+handler: app.lambda_handler
+runtime: python3.8
+executionTimeoutInSecs: 10
+author: apps@faros.ai
+location: https://github.com/faros-ai/faros-apps/tree/master/apps/output-emailer
+tags:
+  - email
+  - notifications

@@ -9,12 +9,12 @@ def lambda_handler(event, context):
     params = event['params']
     recipient = params['recipient']
     text = params['text']
-    link = 'https://pontus-git-cwu-demo.faros-ai.vercel.app/approval'
+    webhookPath = params['webhookPath']
 
     file_loader = FileSystemLoader(os.path.dirname(__file__))
     env = Environment(loader=file_loader)
     template = env.get_template('email.html')
-    html = template.render(text=text, link=link)
+    html = template.render(text=text, webhookPath=webhookPath)
 
     subject = 'Faros AI notification'
 

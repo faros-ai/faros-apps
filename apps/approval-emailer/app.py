@@ -8,6 +8,7 @@ def lambda_handler(event, context):
     client = FarosClient.from_event(event)
     params = event['params']
     recipient = params['recipient']
+    subject = params['subject']
     text = params['text']
     webhookPath = params['webhookPath']
 
@@ -15,8 +16,6 @@ def lambda_handler(event, context):
     env = Environment(loader=file_loader)
     template = env.get_template('email.html')
     html = template.render(text=text, webhookPath=webhookPath)
-
-    subject = 'Faros AI notification'
 
     query = '''mutation($to: [String!]!, $subject: String!, $htmlBody: String!) {
         faros_send_email(

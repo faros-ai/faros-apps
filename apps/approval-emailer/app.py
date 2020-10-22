@@ -9,7 +9,7 @@ def lambda_handler(event, context):
     params = event['params']
     recipient = params['recipient']
     text = params['text']
-    link = 'https://www.faros.ai/pricing'
+    link = 'https://pontus-git-cwu-demo.faros-ai.vercel.app/approval'
 
     file_loader = FileSystemLoader(os.path.dirname(__file__))
     env = Environment(loader=file_loader)

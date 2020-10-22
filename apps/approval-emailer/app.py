@@ -8,11 +8,12 @@ def lambda_handler(event, context):
     client = FarosClient.from_event(event)
     params = event['params']
     recipient = params['recipient']
+    text = params['text']
 
     file_loader = FileSystemLoader(os.path.dirname(__file__))
     env = Environment(loader=file_loader)
     template = env.get_template('email.html')
-    html = template.render()
+    html = template.render(text=text)
 
     subject = 'Faros AI notification'
 

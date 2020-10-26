@@ -9,6 +9,7 @@ def lambda_handler(event, context):
     params = event['params']
     report_name = params['report_name']
     recipient = params['recipient']
+    subject = params['subject'] if 'subject' in params else 'Faros AI notification'
     records = event.get('data')
 
     if records:
@@ -24,7 +25,6 @@ def lambda_handler(event, context):
     html = template.render(report_name=report_name, header=header, data=data)
 
     sender = 'no-reply@faros.ai'
-    subject = 'Faros AI notification'
 
     query = '''mutation($to: [String!]!, $subject: String!, $htmlBody: String!) {
         faros_send_email(

@@ -1,0 +1,17 @@
+appId: lead-time
+displayName: Lead Time
+description: >
+  Computes the mean lead time for a CI/CD pipeline.
+  The lead time is computed for a time window ending in <parameter reference_time_secs> which is a unix timestamp in seconds.
+  The default value for reference_time_secs is the current time.
+  The lead time is aggregated over a period of <parameter window_days> days, and compared to the lead time from <parameter compare_to_days> days ago. 
+  Lead times for different services are weighted by the number of commits on each service.
+  For more information, https://cloud.google.com/blog/products/devops-sre/using-the-four-keys-to-measure-your-devops-performance
+handler: app.lambda_handler
+runtime: python3.8
+executionTimeoutInSecs: 180
+author: snabar@faros.ai
+tags:
+  - dora
+  - cicd
+location: 'https://github.com/faros-ai/faros-apps/tree/master/apps/dora-metrics/lead-time'

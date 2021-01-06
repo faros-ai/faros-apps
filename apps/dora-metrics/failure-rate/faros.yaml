@@ -1,0 +1,17 @@
+appId: failure-rate
+displayName: Change Failure Rate
+description: >
+  Computes change failure rate and mean time between failures in a CI/CD pipeline.
+  The metrics are computed for a time window ending in <parameter reference_time_secs> which is a unix timestamp in seconds.
+  The default value for reference_time_secs is the current time.
+  The metrics are aggregated over a period of <parameter window_days> days, and compared to the metrics from <parameter compare_to_days> days ago. 
+  Failure rates for different services are weighted by the number of deployments on each service. 
+  For more information, https://cloud.google.com/blog/products/devops-sre/using-the-four-keys-to-measure-your-devops-performance
+handler: app.lambda_handler
+runtime: python3.8
+executionTimeoutInSecs: 180
+author: snabar@faros.ai
+tags:
+  - dora
+  - cicd
+location: 'https://github.com/faros-ai/faros-apps/tree/master/apps/dora-metrics/failure-rate'

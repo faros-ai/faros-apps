@@ -1,0 +1,17 @@
+appId: recovery-time
+displayName: Time to Recovery
+description: >
+  Computes the mean time to recovery in a CI/CD pipeline.
+  The recovery time is computed for a time window ending in <parameter reference_time_secs> which is a unix timestamp in seconds.
+  The default value for reference_time_secs is the current time.
+  The recovery time is aggregated over a period of <parameter window_days> days, and compared to the recovery time from <parameter compare_to_days> days ago.  
+  Recovery times for different services are weighted by the number of failures for each service.
+  For more information, https://cloud.google.com/blog/products/devops-sre/using-the-four-keys-to-measure-your-devops-performance
+handler: app.lambda_handler
+runtime: python3.8
+executionTimeoutInSecs: 180
+author: snabar@faros.ai
+tags:
+  - dora
+  - cicd
+location: 'https://github.com/faros-ai/faros-apps/tree/master/apps/dora-metrics/recovery-time'

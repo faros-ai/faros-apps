@@ -1,0 +1,14 @@
+appId: deploy-cycle-breakdown
+displayName: Deploy Cycle Breakdown
+description: >-
+  For each commit that makes it to production, provides a breakdown of PR Review
+  Time, PR Merge Time, Build Time, and Deploy Time.
+  Provides breakdown for all deployments between <parameter start_time_secs> and <parameter end_time_secs>.
+  Both parameters are unix timestamps in seconds, and default to (current time - 30 days) and current time respectively
+handler: app.lambda_handler
+runtime: python3.8
+executionTimeoutInSecs: 180
+author: snabar@faros.ai
+tags:
+  - cicd
+location: 'https://www.github.com/faros-ai/faros-apps/tree/master/apps/dora-metrics/deploy-cycle-breakdown'

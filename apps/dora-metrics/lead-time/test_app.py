@@ -3,7 +3,6 @@ import unittest
 
 from datetime import datetime, timedelta
 from faros.client import FarosClient
-from faros.utils import DATE_FORMAT
 from unittest.mock import patch
 
 
@@ -36,19 +35,21 @@ class LeadTimeTest(unittest.TestCase):
                     "nodes": [
                         {
                             "createdAt": create1_time,
-                            "builds": {
+                            "buildAssociations": {
                                 "nodes": [
                                     {
-                                        "deployments": {
-                                            "nodes": [
-                                                {
-                                                    "endedAt": deploy1_time,
-                                                    "status": "Success",
-                                                    "application": {
-                                                        "name": "Poseidon"
+                                        "build": {
+                                            "deployments": {
+                                                "nodes": [
+                                                    {
+                                                        "endedAt": deploy1_time,
+                                                        "status": "Success",
+                                                        "application": {
+                                                            "name": "Poseidon"
+                                                        }
                                                     }
-                                                }
-                                            ]
+                                                ]
+                                            }
                                         }
                                     }
                                 ]
@@ -56,19 +57,21 @@ class LeadTimeTest(unittest.TestCase):
                         },
                         {
                             "createdAt": create2_time,
-                            "builds": {
+                            "buildAssociations": {
                                 "nodes": [
                                     {
-                                        "deployments": {
-                                            "nodes": [
-                                                {
-                                                    "endedAt": deploy2_time,
-                                                    "status": "Success",
-                                                    "application": {
-                                                        "name": "Poseidon"
+                                        "build": {
+                                            "deployments": {
+                                                "nodes": [
+                                                    {
+                                                        "endedAt": deploy2_time,
+                                                        "status": "Success",
+                                                        "application": {
+                                                            "name": "Poseidon"
+                                                        }
                                                     }
-                                                }
-                                            ]
+                                                ]
+                                            }
                                         }
                                     }
                                 ]
@@ -76,19 +79,21 @@ class LeadTimeTest(unittest.TestCase):
                         },
                         {
                             "createdAt": create3_time,
-                            "builds": {
+                            "buildAssociations": {
                                 "nodes": [
                                     {
-                                        "deployments": {
-                                            "nodes": [
-                                                {
-                                                    "endedAt": deploy3_time,
-                                                    "status": "Success",
-                                                    "application": {
-                                                        "name": "Poseidon"
+                                        "build": {
+                                            "deployments": {
+                                                "nodes": [
+                                                    {
+                                                        "endedAt": deploy3_time,
+                                                        "status": "Success",
+                                                        "application": {
+                                                            "name": "Poseidon"
+                                                        }
                                                     }
-                                                }
-                                            ]
+                                                ]
+                                            }
                                         }
                                     }
                                 ]
@@ -96,19 +101,21 @@ class LeadTimeTest(unittest.TestCase):
                         },
                         {
                             "createdAt": create4_time,
-                            "builds": {
+                            "buildAssociations": {
                                 "nodes": [
                                     {
-                                        "deployments": {
-                                            "nodes": [
-                                                {
-                                                    "endedAt": deploy4_time,
-                                                    "status": "Success",
-                                                    "application": {
-                                                        "name": "Poseidon"
+                                        "build": {
+                                            "deployments": {
+                                                "nodes": [
+                                                    {
+                                                        "endedAt": deploy4_time,
+                                                        "status": "Success",
+                                                        "application": {
+                                                            "name": "Poseidon"
+                                                        }
                                                     }
-                                                }
-                                            ]
+                                                ]
+                                            }
                                         }
                                     }
                                 ]
@@ -116,19 +123,21 @@ class LeadTimeTest(unittest.TestCase):
                         },
                         {
                             "createdAt": create5_time,
-                            "builds": {
+                            "buildAssociations": {
                                 "nodes": [
                                     {
-                                        "deployments": {
-                                            "nodes": [
-                                                {
-                                                    "endedAt": deploy5_time,
-                                                    "status": "Success",
-                                                    "application": {
-                                                        "name": "Poseidon"
+                                        "build": {
+                                            "deployments": {
+                                                "nodes": [
+                                                    {
+                                                        "endedAt": deploy5_time,
+                                                        "status": "Success",
+                                                        "application": {
+                                                            "name": "Poseidon"
+                                                        }
                                                     }
-                                                }
-                                            ]
+                                                ]
+                                            }
                                         }
                                     }
                                 ]
@@ -136,19 +145,21 @@ class LeadTimeTest(unittest.TestCase):
                         },
                         {
                             "createdAt": create6_time,
-                            "builds": {
+                            "buildAssociations": {
                                 "nodes": [
                                     {
-                                        "deployments": {
-                                            "nodes": [
-                                                {
-                                                    "endedAt": deploy6_time,
-                                                    "status": "Success",
-                                                    "application": {
-                                                        "name": "phocus"
+                                        "build": {
+                                            "deployments": {
+                                                "nodes": [
+                                                    {
+                                                        "endedAt": deploy6_time,
+                                                        "status": "Success",
+                                                        "application": {
+                                                            "name": "phocus"
+                                                        }
                                                     }
-                                                }
-                                            ]
+                                                ]
+                                            }
                                         }
                                     }
                                 ]
@@ -163,6 +174,32 @@ class LeadTimeTest(unittest.TestCase):
         results = app.lambda_handler(self.event, None)
         self.assertEqual(results, {"Mean Lead Time": 54000000,
                                    "Mean Lead Time Change": -0.375})
+
+    def test_empty_data(self, mock_execute):
+        query_data = {
+            "vcs": {
+                "commits": {
+                    "nodes": [
+                        {
+                            "createdAt": "1611801851000",
+                            "buildAssociations": {
+                                "nodes": []
+                            }
+                        },
+                        {
+                            "createdAt": "1608595310000",
+                            "buildAssociations": {
+                                "nodes": []
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+        mock_execute.return_value = query_data
+        results = app.lambda_handler(self.event, None)
+        self.assertEqual(
+            results, {"Mean Lead Time": None, "Mean Lead Time Change": None})
 
 
 if __name__ == "__main__":

@@ -15,30 +15,50 @@ class DeployStages:
     build_time: int
     deploy_time: int
 
-    # TODO: Update pr_review_time and pr_merge_time calculations once approvals are available
-    # TODO: Should we be adding null checks for every field here, like the one for the mergedPullRequest?
     def __init__(self, deployment):
         self.id = deployment["id"]
         self.application = deployment["application"]["name"]
         self.ended_at = int(deployment["endedAt"])
-        self.pr_review_time = None
-        pr = deployment["build"]["commit"]["mergedPullRequest"]
-        self.pr_merge_time = int(pr["mergedAt"]) - \
-            int(pr["createdAt"]) if pr else None
+        commits = [
+            node["commit"]
+            for node in deployment["build"]["commitAssociations"]["nodes"]
+        ]
+        commits.sort(key=lambda c: c["createdAt"])
+        last_commit = commits[-1]
+        pr = last_commit["mergedPullRequest"]
+        approvals = [
+            r for r in pr["reviews"]["nodes"]
+            if r["state"] == "approved"
+        ] if pr else None
+        if approvals:
+            approvals.sort(key=lambda a: a["submittedAt"])
+            first_approval = approvals[0]
+            self.pr_review_time = \
+                int(first_approval["submittedAt"]) - int(pr["createdAt"])
+            self.pr_merge_time = \
+                int(pr["mergedAt"]) - int(first_approval["submittedAt"])
+        else:
+            self.pr_merge_time = \
+                int(pr["mergedAt"]) - int(pr["createdAt"]) if pr else None
+            self.pr_review_time = None
         self.build_time = int(deployment["build"]["endedAt"]) - \
             int(deployment["build"]["startedAt"])
-        self.deploy_time = int(
-            deployment["endedAt"]) - int(deployment["startedAt"])
+        self.deploy_time = \
+            int(deployment["endedAt"]) - int(deployment["startedAt"])
 
 
 def lambda_handler(event, context):
     client = FarosClient.from_event(event)
-    start_time = int(event["params"].get(
-        "start_time_secs", (datetime.now()-timedelta(days=30)).timestamp()))
+    start_time = int(
+        event["params"].get(
+            "start_time_secs", (datetime.now() -
+                                timedelta(days=30)).timestamp()
+        )
+    )
     end_time = int(event["params"].get(
         "end_time_secs", datetime.now().timestamp()))
 
-    query = '''{
+    query = """{
       cicd {
         deployments(filter: {startedAt: {greaterThan: "%s"}, endedAt: {lessThan: "%s"}}) {
           nodes {
@@ -52,22 +72,38 @@ def lambda_handler(event, context):
             build {
               startedAt
               endedAt
-              commit {
-                createdAt
-                mergedPullRequest {
-                  createdAt
-                  mergedAt
+              commitAssociations {
+                nodes {
+                  commit {
+                    createdAt
+                    mergedPullRequest {
+                      createdAt
+                      mergedAt
+                      reviews {
+                        nodes {
+                          state
+                          submittedAt
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
           }
         }
       }
-    }''' % (start_time * 1000, end_time * 1000)
+    }""" % (
+        start_time * 1000,
+        end_time * 1000,
+    )
 
     response = client.graphql_execute(query)
-    deployments = [d for d in response["cicd"]["deployments"]["nodes"]
-                   if d.get("endedAt") is not None and d["status"] == "Success"]
+    deployments = [
+        d
+        for d in response["cicd"]["deployments"]["nodes"]
+        if d.get("endedAt") is not None and d["status"] == "Success"
+    ]
     deployments.sort(key=lambda d: d["endedAt"])
     breakdown = [DeployStages(d) for d in deployments]
 

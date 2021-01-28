@@ -33,9 +33,9 @@ def mean_lead_time(deployed_commits):
 def extract_deployed_commits(commits):
     deployed_commits = []
     for c in commits:
-        for b in c["builds"]["nodes"]:
-            for d in b["deployments"]["nodes"]:
-                if d["endedAt"] != None:
+        for b in c["buildAssociations"]["nodes"]:
+            for d in b["build"]["deployments"]["nodes"]:
+                if d["endedAt"] is not None:
                     deployed_commits.append(
                         DeployedCommit(
                             commit_created_at=datetime.fromtimestamp(
@@ -62,14 +62,16 @@ def lambda_handler(event, context):
          commits(filter: {createdAt: {greaterThan: "%s"}}) {
            nodes {
              createdAt
-             builds {
+             buildAssociations {
                nodes {
-                 deployments {
-                   nodes {
-                     endedAt
-                     status
-                     application {
-                       name
+                 build {
+                   deployments {
+                     nodes {
+                        endedAt
+                        status
+                        application {
+                          name
+                        }
                      }
                    }
                  }
